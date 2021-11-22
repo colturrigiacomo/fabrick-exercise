@@ -7,7 +7,7 @@ import com.fabrick.exercise.models.requests.MoneyTransfer;
 
 public class Mapper {
 
-    public static Payment mapMoneyTrasferToPayment(MoneyTransfer req) {
+    public static Payment mapMoneyTransferToPayment(MoneyTransfer req) {
         return Payment.builder()
                 .amount(req.getAmount())
                 .currency(req.getCurrency())

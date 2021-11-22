@@ -93,7 +93,7 @@ public class BankServiceImpl implements BankService {
     public PaymentResponse createMoneyTransfer(MoneyTransfer req, String accountId){
         String completedUrl = url + "/" + accountId + "/payments/money-transfers";
 
-        Payment payment = Mapper.mapMoneyTrasferToPayment(req);
+        Payment payment = Mapper.mapMoneyTransferToPayment(req);
         HttpEntity<Payment> entity = new HttpEntity<>(payment);
 
         try {
