@@ -1,7 +1,7 @@
 package com.fabrick.exercise.services;
 
 import com.fabrick.exercise.exceptions.FabrickException;
-import com.fabrick.exercise.mapper.Mapper;
+import com.fabrick.exercise.mappers.Mapper;
 import com.fabrick.exercise.models.*;
 import com.fabrick.exercise.models.generics.GenericResponse;
 import com.fabrick.exercise.models.requests.MoneyTransfer;

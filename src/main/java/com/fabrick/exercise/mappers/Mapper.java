@@ -1,4 +1,4 @@
-package com.fabrick.exercise.mapper;
+package com.fabrick.exercise.mappers;
 
 import com.fabrick.exercise.models.Creditor;
 import com.fabrick.exercise.models.CreditorAccount;
