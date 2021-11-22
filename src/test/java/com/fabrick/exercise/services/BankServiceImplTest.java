@@ -1,48 +1,55 @@
 package com.fabrick.exercise.services;
 
+import com.fabrick.exercise.exceptions.FabrickException;
 import com.fabrick.exercise.models.Balance;
+import com.fabrick.exercise.models.Transaction;
+import com.fabrick.exercise.models.requests.MoneyTransfer;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.Mockito;
-import org.mockito.junit.MockitoJUnitRunner;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.client.RestTemplate;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.junit4.SpringRunner;
 
 import java.math.BigDecimal;
-import java.util.Date;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
-@RunWith(MockitoJUnitRunner.class)
+@SpringBootTest
+@RunWith(SpringRunner.class)
 class BankServiceImplTest {
 
-    @Mock
-    private RestTemplate restTemplate = new RestTemplate();
+    @Autowired
+    private BankServiceImpl bankService;
 
-    @InjectMocks
-    private BankService bankService = new BankServiceImpl();
-
-    private static final String URL = "https://sandbox.platfr.io/api/gbs/banking/v4.0/accounts";
+    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+    public static final String ACCOUNT_ID = "14537780";
 
     @Test
     void getBalance() {
-        Balance response = new Balance(new Date(), BigDecimal.valueOf(9), BigDecimal.valueOf(9), "EUR");
-        Mockito
-            .when(restTemplate.getForEntity(URL + "/14537780/balance", Balance.class))
-            .thenReturn(new ResponseEntity<>(response, HttpStatus.OK));
-
-        Balance balance = bankService.getBalance("14537780");
-        assertEquals(response, balance);
+        Balance balance = bankService.getBalance(ACCOUNT_ID);
+        assertNotNull(balance);
     }
 
     @Test
-    void getTransactions() {
+    void getBalanceError() {
+        assertThrows(FabrickException.class, () -> bankService.getBalance(ACCOUNT_ID));
+    }
+
+    @Test
+    void getTransactions() throws ParseException {
+        List<Transaction> transactions = bankService.getTransactions("14537780", sdf.parse("2019-01-01"),
+                sdf.parse("2019-12-01"));
+        assertNotNull(transactions);
     }
 
     @Test
     void createMoneyTransfer() {
+        MoneyTransfer moneyTransfer = new MoneyTransfer("John Doe", "test",
+                "IT23A0336844430152923804660", "EUR", BigDecimal.valueOf(800), "2021-11-23");
+        assertThrows(FabrickException.class, () -> bankService.createMoneyTransfer(moneyTransfer, ACCOUNT_ID));
     }
 }
