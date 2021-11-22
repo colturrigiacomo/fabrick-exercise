@@ -1,15 +1,16 @@
 package com.fabrick.exercise.models;
 
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
-@Builder
-@AllArgsConstructor
 @NoArgsConstructor
-public class CreditorAccount {
-    private String accountCode;
-    private String bicCode;
+@AllArgsConstructor
+public class Address {
+
+    private String address;
+    private String city;
+    private String countryCode;
+
 }

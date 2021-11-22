@@ -2,9 +2,7 @@ package com.fabrick.exercise.services;
 
 import com.fabrick.exercise.exceptions.FabrickException;
 import com.fabrick.exercise.mapper.Mapper;
-import com.fabrick.exercise.models.Balance;
-import com.fabrick.exercise.models.Payment;
-import com.fabrick.exercise.models.TransactionsList;
+import com.fabrick.exercise.models.*;
 import com.fabrick.exercise.models.generics.GenericResponse;
 import com.fabrick.exercise.models.requests.MoneyTransfer;
 import com.fabrick.exercise.utility.ExceptionUtil;
@@ -27,6 +25,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Service
@@ -63,7 +62,7 @@ public class BankServiceImpl implements BankService {
     }
 
     @Override
-    public Object getTransactions(String accountId, Date dateFrom, Date dateTo) {
+    public List<Transaction> getTransactions(String accountId, Date dateFrom, Date dateTo) {
 
         String completedUrl = url + "/" + accountId + "/transactions";
         completedUrl = UriComponentsBuilder.fromHttpUrl(completedUrl)
@@ -91,17 +90,19 @@ public class BankServiceImpl implements BankService {
     }
 
     @Override
-    public GenericResponse<?> createMoneyTransfer(MoneyTransfer req, String accountId){
+    public PaymentResponse createMoneyTransfer(MoneyTransfer req, String accountId){
         String completedUrl = url + "/" + accountId + "/payments/money-transfers";
 
         Payment payment = Mapper.mapMoneyTrasferToPayment(req);
         HttpEntity<Payment> entity = new HttpEntity<>(payment);
 
         try {
-            ResponseEntity<GenericResponse<?>> response = restTemplate.exchange(
+            ResponseEntity<GenericResponse<PaymentResponse>> response = restTemplate.exchange(
                     completedUrl, HttpMethod.POST, entity, new ParameterizedTypeReference<>() {
                     });
-            return response.getBody();
+            if( response.getBody() != null ){
+                return response.getBody().getPayload();
+            }
         } catch (HttpClientErrorException | HttpServerErrorException e) {
             genericException(e.getResponseBodyAsString(), e.getStatusCode(), e.getMessage());
         }
