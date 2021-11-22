@@ -11,5 +11,5 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class CreditorAccount {
     private String accountCode;
-    private String bicCode;
+    //private String bicCode;
 }
