@@ -36,12 +36,12 @@ class BankServiceImplTest {
 
     @Test
     void getBalanceError() {
-        assertThrows(FabrickException.class, () -> bankService.getBalance(ACCOUNT_ID));
+        assertThrows(FabrickException.class, () -> bankService.getBalance("1453778"));
     }
 
     @Test
     void getTransactions() throws ParseException {
-        List<Transaction> transactions = bankService.getTransactions("14537780", sdf.parse("2019-01-01"),
+        List<Transaction> transactions = bankService.getTransactions(ACCOUNT_ID, sdf.parse("2019-01-01"),
                 sdf.parse("2019-12-01"));
         assertNotNull(transactions);
     }
